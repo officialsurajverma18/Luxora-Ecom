@@ -1,36 +1,53 @@
-# [Project name]
+# Luxora Watches
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A cinematic luxury watch brand website with immersive scroll animations, interactive 3D watch viewer, and a dark-gold aesthetic.
 
 ## Run & Operate
 
+- `pnpm --filter @workspace/luxora run dev` — run the frontend (port auto-assigned)
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
+- Frontend: React + Vite, Tailwind CSS v4
+- 3D: Three.js (with CSS fallback for non-WebGL environments)
+- Animation: GSAP + ScrollTrigger
+- Typography: Cormorant Garamond (serif), Inter (sans)
+- API: Express 5 (template, no endpoints yet)
 - Build: esbuild (CJS bundle)
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/luxora/` — main frontend app
+- `artifacts/luxora/src/pages/Home.tsx` — single-page layout with all sections
+- `artifacts/luxora/src/components/WatchViewer.tsx` — Three.js 3D watch (+ CSS fallback)
+- `artifacts/luxora/src/components/Customizer.tsx` — interactive watch configurator
+- `artifacts/luxora/src/components/CollectionGrid.tsx` — collection showcase with filter
+- `artifacts/luxora/src/index.css` — Luxora design tokens (charcoal + gold palette)
+- `artifacts/luxora/public/luxora-logo.png` — brand logo
+- `artifacts/api-server/` — Express API server (extend as needed)
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Single-page app with all content as scroll sections — no routing needed beyond "/"
+- Three.js WatchViewer detects WebGL support at mount time; falls back to a CSS watch illustration if unavailable (e.g. Replit sandbox)
+- GSAP ScrollTrigger contexts are scoped per component and reverted on unmount to prevent memory leaks
+- Navbar scroll effect uses inline style manipulation instead of GSAP toggleClass (which cannot handle space-separated class strings)
+- Watch collection uses CSS-drawn watch illustrations instead of image files for zero-asset-dependency design
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+A luxury watch brand showcase with:
+- Cinematic dark-gold hero with GSAP character-by-character text animation
+- Brand story / manifesto section with scroll-triggered reveals
+- Interactive 3D watch viewer (Three.js with real-time clock hands + OrbitControls)
+- Watch configurator (Dial Color · Strap Material · Case Finish)
+- Filterable collection grid (Heritage / Limited / Sport)
+- Gold marquee scrolling ticker
+- Contact / reservation form footer
 
 ## User preferences
 
@@ -38,7 +55,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- WebGL is disabled in the Replit preview sandbox — the CSS watch fallback activates automatically
+- GSAP toggleClass cannot use space-separated class strings — use onEnter/onLeaveBack callbacks with inline styles instead
+- Google Fonts @import must be the FIRST line of index.css before any other @import statements
 
 ## Pointers
 

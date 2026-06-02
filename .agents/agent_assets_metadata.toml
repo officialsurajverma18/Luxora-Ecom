@@ -1,0 +1,44 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "05pKJx5e7QpyXuIi0lLBU"
+uri = "file://artifacts/luxora/public/images/hero-bg.png"
+type = "image"
+title = "luxury watch hero background"
+
+[[generated]]
+id = "4FVMExfdoptZP3D-8-HUj"
+uri = "file://artifacts/luxora/public/images/watch-heritage.png"
+type = "image"
+title = "luxury heritage watch"
+
+[[generated]]
+id = "84Xn_sRvDspVP7b6N5ewv"
+uri = "file://artifacts/luxora/public/images/watch-noir.png"
+type = "image"
+title = "luxury noir edition watch"
+
+[[generated]]
+id = "0vVXTSZvP7lEmqMvm4YT0"
+uri = "file://artifacts/luxora/public/images/watch-tourbillon.png"
+type = "image"
+title = "luxury tourbillon watch"
+
+[[generated]]
+id = "cVDDTyh8wcIuYMxtYnoiz"
+uri = "file://artifacts/luxora/public/images/watch-gmt.png"
+type = "image"
+title = "luxury gmt watch"
+
+[[generated]]
+id = "BY9MU5phN2f_gJnLTs4lJ"
+uri = "file://artifacts/luxora/public/images/watch-moon.png"
+type = "image"
+title = "luxury perpetual moon watch"
+
+[[generated]]
+id = "-SDoprILb2P1jnl3tQvHQ"
+uri = "file://artifacts/luxora/public/images/watch-skeleton.png"
+type = "image"
+title = "luxury skeleton watch"
