@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const HERO_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAnEwR-M5Gg8OWSP_-8oi5lQHxJmHtdtaflKHq8uZ1hisJklU5KTOa6G2pE_0gN3rFqw3QwPAkv44KlsbS8d354WUQKc-teEk5l9BtK7Zv6s6qZjUmfaJeE9fXropona9u2dOXsU7N6Wrh7oRzqh8Qx8s4I7gKP6ZZyrMs3DQrb6WthvW4ZhYIUmNaGmhvmO4m6DIour8s5IZ0wkXO_cmAct3whUXxE64aAdAJvfKV-i7mbVT-yth-odCBDzriDxSTWI05gnXHOSWA';
@@ -30,8 +29,6 @@ export default function Bespoke() {
 
   return (
     <div style={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
-      <Navbar activeLink="bespoke" centered />
-
       <main>
         {/* ─── HERO ─────────────────────────────────────────────────── */}
         <header style={{ position: 'relative', height: 921, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>

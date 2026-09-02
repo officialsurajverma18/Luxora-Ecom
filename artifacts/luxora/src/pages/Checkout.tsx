@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
-import logoSrc from '@assets/ChatGPT_Image_Jun_2,_2026,_04_57_21_PM_1780399663886.png';
-
-const WATCH_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCX5C64eOb1L-yMaCnPYZBL_fayC-N2NlJA04miSsBq-7s0OHFuhE1mqnYQKk_VcKbGVLjZveHeoip73-egQz3YlndSLWeCI7rWiNar-6XvYUtPNby-x_Rdjo5ErPbFUotqJm1mWov32bNtoWx6_g2gh4ePvHQuFLT6nE3QFkjL4HBHhdGws0RdcRYvOBNDxVr42zd-lLCPbn6xkQb_X38UQFNAQsJ32qENtqYrQS_SrLRbRW-LiPkYY';
+import { useCart } from '@/context/cart-context';
 
 const S = {
   sans: { fontFamily: 'Montserrat, sans-serif' },
@@ -40,24 +38,25 @@ type PayMethod = 'card' | 'wire' | 'apple';
 
 export default function Checkout() {
   const [payMethod, setPayMethod] = useState<PayMethod>('card');
+  const { items, subtotal } = useCart();
+  const vat = subtotal * 0.08;
+  const total = subtotal + vat;
+
+  if (items.length === 0) {
+    return (
+      <main style={{ minHeight: '70vh', padding: '180px 24px 120px', textAlign: 'center', backgroundColor: '#f9f9f9' }}>
+        <h1 style={{ ...S.serif, fontSize: 48, fontWeight: 600, marginBottom: 16 }}>Your selection is empty</h1>
+        <p style={{ ...S.sans, color: S.muted, marginBottom: 28 }}>Add a timepiece before continuing to secure checkout.</p>
+        <Link href="/collection">
+          <span style={{ display: 'inline-block', background: S.black, color: '#fff', padding: '16px 24px', ...S.sans, fontSize: 12, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', cursor: 'pointer' }}>Explore Collection</span>
+        </Link>
+      </main>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
-      {/* Checkout Nav */}
-      <header style={{ position: 'fixed', top: 0, width: '100%', zIndex: 50, backgroundColor: 'rgba(249,249,249,0.92)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 80, paddingLeft: 80, paddingRight: 80, maxWidth: 1440, margin: '0 auto' }}>
-          <Link href="/">
-            <img src={logoSrc} alt="Luxora" style={{ height: 44, width: 'auto', cursor: 'pointer', objectFit: 'contain' }} />
-          </Link>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, ...S.sans, fontSize: 12, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: S.muted }}>
-            <span className="material-symbols-outlined" style={{ color: S.gold, fontSize: 20 }}>lock</span>
-            Secure Checkout
-          </div>
-          <span className="material-symbols-outlined" style={{ cursor: 'pointer', color: S.black }}>shopping_bag</span>
-        </div>
-      </header>
-
-      <main style={{ paddingTop: 128, paddingBottom: 120, paddingLeft: 80, paddingRight: 80, maxWidth: 1440, margin: '0 auto' }}>
+      <main style={{ paddingTop: 88, paddingBottom: 120, paddingLeft: 80, paddingRight: 80, maxWidth: 1440, margin: '0 auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 80, alignItems: 'start' }}>
           {/* Left: Shipping + Payment */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 64 }}>
@@ -115,41 +114,14 @@ export default function Checkout() {
                 ))}
               </div>
 
-              {/* Card details */}
-              {payMethod === 'card' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
-                  <div style={{ position: 'relative' }}>
-                    <label style={labelStyle}>Card Number</label>
-                    <input
-                      type="text"
-                      placeholder="0000 0000 0000 0000"
-                      style={{ ...inputStyle, paddingRight: 64 }}
-                      onFocus={(e) => ((e.target as HTMLElement).style.borderBottomColor = S.gold)}
-                      onBlur={(e) => ((e.target as HTMLElement).style.borderBottomColor = 'rgba(0,0,0,0.2)')}
-                    />
-                    <div style={{ position: 'absolute', right: 0, bottom: 12, display: 'flex', gap: 8 }}>
-                      <span style={{ width: 32, height: 20, backgroundColor: 'rgba(0,0,0,0.05)', borderRadius: 4 }} />
-                      <span style={{ width: 32, height: 20, backgroundColor: 'rgba(0,0,0,0.05)', borderRadius: 4 }} />
-                    </div>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-                    <div>
-                      <label style={labelStyle}>Expiry Date</label>
-                      <input type="text" placeholder="MM / YY" style={inputStyle}
-                        onFocus={(e) => ((e.target as HTMLElement).style.borderBottomColor = S.gold)}
-                        onBlur={(e) => ((e.target as HTMLElement).style.borderBottomColor = 'rgba(0,0,0,0.2)')}
-                      />
-                    </div>
-                    <div>
-                      <label style={labelStyle}>Security Code (CVV)</label>
-                      <input type="password" placeholder="•••" style={inputStyle}
-                        onFocus={(e) => ((e.target as HTMLElement).style.borderBottomColor = S.gold)}
-                        onBlur={(e) => ((e.target as HTMLElement).style.borderBottomColor = 'rgba(0,0,0,0.2)')}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
+              <div style={{ padding: 24, backgroundColor: '#f3f3f4', border: '1px solid rgba(115,92,0,0.18)' }}>
+                <p style={{ ...S.sans, fontSize: 12, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: S.gold, marginBottom: 10 }}>
+                  Secure payment handoff
+                </p>
+                <p style={{ ...S.sans, fontSize: 14, lineHeight: 1.7, color: S.muted }}>
+                  Payment details are collected only by our certified payment partner after your order request. Luxora never stores card numbers or security codes in this site.
+                </p>
+              </div>
             </section>
 
             {/* Trust badges */}
@@ -173,25 +145,29 @@ export default function Checkout() {
               <h3 style={{ ...S.serif, fontSize: 24, fontWeight: 600, color: S.black, marginBottom: 32 }}>Purchase Summary</h3>
 
               {/* Product */}
-              <div style={{ display: 'flex', gap: 24, marginBottom: 40, paddingBottom: 32, borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-                <div style={{ width: 96, height: 120, backgroundColor: '#eeeeee', overflow: 'hidden', flexShrink: 0 }}>
-                  <img src={WATCH_IMG} alt="Oceanic Deep 42" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <div>
-                    <h4 style={{ ...S.sans, fontSize: 14, fontWeight: 600, letterSpacing: '0.05em', color: S.black, marginBottom: 4 }}>OCEANIC DEEP 42</h4>
-                    <p style={{ ...S.sans, fontSize: 12, color: S.muted }}>Stellar Silver Edition</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 40, paddingBottom: 32, borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+                {items.map((item) => (
+                  <div key={item.id} style={{ display: 'flex', gap: 16 }}>
+                    <div style={{ width: 72, height: 88, backgroundColor: '#eeeeee', overflow: 'hidden', flexShrink: 0 }}>
+                      <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div style={{ display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <h4 style={{ ...S.sans, fontSize: 14, fontWeight: 600, letterSpacing: '0.05em', color: S.black, marginBottom: 4 }}>{item.name}</h4>
+                        <p style={{ ...S.sans, fontSize: 12, color: S.muted }}>Qty {item.quantity} · {item.subtitle}</p>
+                      </div>
+                      <p style={{ ...S.sans, fontSize: 14, fontWeight: 600, color: S.gold }}>${(item.price * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+                    </div>
                   </div>
-                  <p style={{ ...S.sans, fontSize: 14, fontWeight: 600, color: S.gold }}>$12,400.00</p>
-                </div>
+                ))}
               </div>
 
               {/* Line items */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
                 {[
-                  { label: 'Subtotal', value: '$12,400.00', gold: false },
+                  { label: 'Subtotal', value: `$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, gold: false },
                   { label: 'Express Logistics', value: 'Complimentary', gold: true },
-                  { label: 'Estimated VAT', value: '$992.00', gold: false },
+                  { label: 'Estimated VAT', value: `$${vat.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, gold: false },
                 ].map((row) => (
                   <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', ...S.sans, fontSize: 16, lineHeight: 1.6 }}>
                     <span style={{ color: S.muted }}>{row.label}</span>
@@ -203,7 +179,7 @@ export default function Checkout() {
               {/* Total */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingTop: 24, borderTop: '1px solid rgba(0,0,0,0.1)', marginBottom: 40 }}>
                 <span style={{ ...S.sans, fontSize: 12, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase' }}>TOTAL DUE</span>
-                <span style={{ ...S.serif, fontSize: 24, fontWeight: 600, color: S.black }}>$13,392.00</span>
+                <span style={{ ...S.serif, fontSize: 24, fontWeight: 600, color: S.black }}>${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
               </div>
 
               <button

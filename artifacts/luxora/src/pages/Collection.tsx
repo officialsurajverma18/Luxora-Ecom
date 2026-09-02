@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const products = [
@@ -84,9 +83,7 @@ export default function Collection() {
 
   return (
     <div style={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
-      <Navbar activeLink="collections" />
-
-      <main style={{ paddingTop: 80 }}>
+      <main style={{ paddingTop: 88 }}>
         {/* Header */}
         <section style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 48, paddingBottom: 64 }}>
           <div style={{ maxWidth: 1440, margin: '0 auto', textAlign: 'center' }}>

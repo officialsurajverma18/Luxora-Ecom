@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'wouter';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const HERO_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6oz0bwaHY9P3ZwCi-Twe_mGt48igZezz5yF1-qJU5YFr2tXhchktNycSdpyn8fgVNSaK2uTXLgYm948UFXxWMAUoBo5xcsRpGnzON0qcim-p6xDBfA3FH0FQXEBZA8x1LcugI53FPLjZR4xFdD7Dm_04W28G4D1dB6lkBWebTGDmBjeU8MCgNiSonFilg72ei9lA8j0iSw4Wu0EOL2v6XzAoIZ4h1pwnj0Wncaqx69Uv1hCzPPUzamSPC_rwvkw6ADBrnvFXIzHk';
@@ -39,9 +38,7 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
-      <Navbar activeLink="collections" />
-
-      <main style={{ paddingTop: 80 }}>
+      <main style={{ paddingTop: 88 }}>
         {/* ─── HERO ─────────────────────────────────────────────────── */}
         <section
           ref={heroRef}

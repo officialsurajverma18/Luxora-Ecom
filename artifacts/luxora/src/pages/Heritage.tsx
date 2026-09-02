@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const HERO_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuANIMkTi7ZfDEuImgc_V2KMsDv-v5shxPVOIZoeWgEPqK4-t9KMPTGcym-n9E1FacMQLSmZZRe0V7vhAGEU_hTlFtdUQ8cCHmiLm5k-c71eqBmLhEHaA1U-wIcl37UFqz1mr1I5rzx2BKfxLdonMXWtAFfFqvr0jGK_MG4Jrp-OjqZezm4TmEKbOFDxwyynRtInIoZPM7t-pN7ktCLFyxlkVrq3JzYNwrzhw5uk1F_Qkyim_yD07p2ULOWbgyUiZOY9wNLrvk5g_YE';
@@ -53,8 +52,6 @@ export default function Heritage() {
 
   return (
     <div style={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
-      <Navbar activeLink="heritage" />
-
       <main>
         {/* ─── HERO ─────────────────────────────────────────────────── */}
         <section style={{ position: 'relative', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>

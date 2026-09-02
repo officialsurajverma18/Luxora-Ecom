@@ -1,47 +1,199 @@
 import { useState } from 'react';
 import { Link, useParams } from 'wouter';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useCart } from '@/context/cart-context';
 
-const MAIN_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCStQPNI2t5Epvsk3aciWVm4zO0RbI-qTWQSNLFLpACHoO-CFJhw_H10uxzYhWtNKniYCW1Sdzhs2i3_HqzEuI4n5rw35n0guNlzGWndmHEQcwN_HX0P6hl0dXc05WSupiVa4Q8SMIbwq3vcAcHgamaTE9QdS8PoPdsveedmJi3zc0JbLzcvCpwv3Qsw_VBdCsRpwJPqlkHfDUmngW3n5GlKqb7BAgmjK2R26OfcJxeR-bYH0YJvY6uSwCwBh53kxKq1jHao2S9rss';
-const MOVEMENT_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDAOYPDfMfiUeU8l6rHOMcdnaIChAGrM-NfDzebx5cIiXtNX4hHmDRJFDfjWxYuToMky8fPiucosYB0FlirWIGdIIwBNbZLcSc4cDM1L7JkBs9UlpH-PpQnBFzeQDS2Ez3VA7rtfMC4Xsa2PW63WnPx1HwaNnlLadKFJlcVtuQ9mQvMa20ckAQQ5pPPGedR9szgnofZl8UAqosqDeV7mH7QT5DE25DP1UQloPhF4yB-iOK-1JWcBMC0_XrjFaLn28bULeY9Tvsdrhg';
-const OCEAN_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCofKJWGobAo58zh0JNyPURZXBrELncjLzYv613mIM60B4I0hpJtQEoLfWBmoVFgLZLGxfij1ngzwmfAvaNUUubtjp1ta9DsOnxiuBiyH-o03kikGC6yC7c1O_vM3dFiDXf5yezwPQv6glaNkBeisQPQSSiN9ImPVRPQzhgseROuuN2JaRCKV6OusDsSpqdfCW00Kymcc0ia0XF5hib8aJPCFMsH4H8_jQzvKm6WYD7Arwg_e5xXzPm1AVoets2rMZm6abrLQrNcSo';
+const MOVEMENT_IMG =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuDAOYPDfMfiUeU8l6rHOMcdnaIChAGrM-NfDzebx5cIiXtNX4hHmDRJFDfjWxYuToMky8fPiucosYB0FlirWIGdIIwBNbZLcSc4cDM1L7JkBs9UlpH-PpQnBFzeQDS2Ez3VA7rtfMC4Xsa2PW63WnPx1HwaNnlLadKFJlcVtuQ9mQvMa20ckAQQ5pPPGedR9szgnofZl8UAqosqDeV7mH7QT5DE25DP1UQloPhF4yB-iOK-1JWcBMC0_XrjFaLn28bULeY9Tvsdrhg';
+const OCEAN_IMG =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCofKJWGobAo58zh0JNyPURZXBrELncjLzYv613mIM60B4I0hpJtQEoLfWBmoVFgLZLGxfij1ngzwmfAvaNUUubtjp1ta9DsOnxiuBiyH-o03kikGC6yC7c1O_vM3dFiDXf5yezwPQv6glaNkBeisQPQSSiN9ImPVRPQzhgseROuuN2JaRCKV6OusDsSpqdfCW00Kymcc0ia0XF5hib8aJPCFMsH4H8_jQzvKm6WYD7Arwg_e5xXzPm1AVoets2rMZm6abrLQrNcSo';
 
-const RELATED = [
-  {
-    id: 'lunar-gmt',
-    name: 'Lunar GMT',
-    series: 'Travel Series',
+type ProductData = {
+  id: string;
+  name: string;
+  subtitle: string;
+  price: string;
+  description: string;
+  accent: string;
+  mainImg: string;
+  movementLabel: string;
+  movementTitle: string;
+  movementBody: string;
+  resistanceLabel: string;
+  resistanceTitle: string;
+  resistanceBody: string;
+  constructionLabel: string;
+  constructionTitle: string;
+  constructionBody: string;
+  dial: string;
+  reserve: string;
+};
+
+const PRODUCTS: Record<string, ProductData> = {
+  'oceanic-deep-42': {
+    id: 'oceanic-deep-42',
+    name: 'Oceanic Deep 42',
+    subtitle: "The Professional Mariner's Standard",
+    price: '$12,400',
+    description:
+      "Engineering meets elegance. The Oceanic Deep 42 is a testament to Luxora's commitment to maritime exploration, blending high-grade 316L steel with our signature ceramic bezel technology.",
+    accent: '#735c00',
+    mainImg:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCStQPNI2t5Epvsk3aciWVm4zO0RbI-qTWQSNLFLpACHoO-CFJhw_H10uxzYhWtNKniYCW1Sdzhs2i3_HqzEuI4n5rw35n0guNlzGWndmHEQcwN_HX0P6hl0dXc05WSupiVa4Q8SMIbwq3vcAcHgamaTE9QdS8PoPdsveedmJi3zc0JbLzcvCpwv3Qsw_VBdCsRpwJPqlkHfDUmngW3n5GlKqb7BAgmjK2R26OfcJxeR-bYH0YJvY6uSwCwBh53kxKq1jHao2S9rss',
+    movementLabel: 'Movement',
+    movementTitle: 'Calibre LX-102',
+    movementBody:
+      'A COSC-certified automatic movement with a Glucydur balance wheel and Nivaflex hairspring for extreme precision.',
+    resistanceLabel: 'Resistance',
+    resistanceTitle: '300 Meters',
+    resistanceBody:
+      'Triplock triple waterproofness with a screw-down crown and helium escape valve for saturation diving.',
+    constructionLabel: 'Construction',
+    constructionTitle: '42mm Brushed Steel',
+    constructionBody:
+      'Hand-finished 316L stainless steel paired with a unidirectional ceramic bezel.',
+    dial: 'Midnight Blue Sunray',
+    reserve: '72 Hours',
+  },
+  'elysium-gold': {
+    id: 'elysium-gold',
+    name: 'Elysium Gold',
+    subtitle: 'Heritage in Warm Rose Gold',
+    price: '$28,900',
+    description:
+      'A refined statement piece shaped by hand in 18K rose gold, designed for collectors who want warmth, weight, and quiet authority.',
+    accent: '#a87b2e',
+    mainImg:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBQ6gOeBlk7Z7rEvNDL0-Ak2ugZl6D4BD16mWVYksx5bDfVq5nBZL_dCLBNDrJiLNtqNn71NPPBt2AYUj2WjDgliZ75BTiPPc8Cz72wRrkE-YGI4WkUTNxgwS2i6XXgdflNLwoyg0mAEvaagBAbIuMuvGeApopXI6IcKpH7SYn89OeCxHHGk2-oxaRzTDqLy7Dd10DopiMRgfvXLMRyo6N9cKHh7X1MKQTwP53tun4FmxrPwOcekloT1eDjqmmKBDOH4YA6E6HeEvI',
+    movementLabel: 'Movement',
+    movementTitle: 'Manual Wind Calibre',
+    movementBody:
+      'Manual wind calibre with a long power reserve and softly decorated bridge architecture.',
+    resistanceLabel: 'Resistance',
+    resistanceTitle: 'Sapphire Display',
+    resistanceBody:
+      'Balanced everyday wear construction with a sapphire crystal front and back.',
+    constructionLabel: 'Construction',
+    constructionTitle: '18K Rose Gold',
+    constructionBody:
+      'Rose gold case with an alligator leather strap and hand-engraved dial.',
+    dial: 'Warm Champagne',
+    reserve: '60 Hours',
+  },
+  'chronos-titanium': {
+    id: 'chronos-titanium',
+    name: 'Chronos Titanium',
+    subtitle: 'Brushed Titanium Precision',
+    price: '$15,200',
+    description:
+      'Ultra-light and sharply modern, Chronos Titanium is built for movement, balance, and everyday versatility.',
+    accent: '#a8b6c9',
+    mainImg:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuB8Qad3-8DQO4njxfZnkdcU0Zym7IIKuOuLgSKyKs_KduNl1Uwyp1wLV0AWOV9qsdt2EYGDaDQm47vvK9YsIhUXe6ul3GlX800u3UpAU6ngoF0YNv9x-lt0GHmOnAYWAxCRrl9_CTaRRiOLsdItlqwgKFccVDiQN_igySQ7mIz7DZQ5y0YtqvuntkR904zQsk7Ul06n29c9iTV2RhipcrGuEtW5OH2L_PqgHVupfQv2q2anuS5zYUYZ5iQBiQKN602lWkakFBfqDA0',
+    movementLabel: 'Movement',
+    movementTitle: 'Skeletonized Automatic',
+    movementBody:
+      'Skeletonized automatic movement with a focus on weight reduction and mechanical clarity.',
+    resistanceLabel: 'Resistance',
+    resistanceTitle: 'Daily Wear',
+    resistanceBody:
+      'Engineered for daily wear with anti-reflective sapphire and shock-resistant architecture.',
+    constructionLabel: 'Construction',
+    constructionTitle: 'Grade 5 Titanium',
+    constructionBody:
+      'Grade 5 titanium case, ultra-light strap integration, and hand-finished surfaces.',
+    dial: 'Graphite Skeleton',
+    reserve: '68 Hours',
+  },
+  'admiral-navy': {
+    id: 'admiral-navy',
+    name: 'Admiral Navy',
+    subtitle: 'Steel & Navy Enamel',
     price: '$9,800',
-    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC9IDGQqDPMoce8sdNweOM6lOooAIh_xyxylTMa4kdkUC-sPchwYjQ8lVI4rtVwg169_OOH-WmJZqCZKYf97oEhuA8nQRlM3Uh3GJnO3NKQz8B1wYCjHxBHNDbxAQzrwJmb-PH2J5UlvxefF5gtCZGVeC6eGUGdhswoMc4lVs9dlMDseIpEKvSgkwdKaUOXwJ2KztfKxtyOlNLFFDNkxwLZ6N0m_mltwG-U6dRka79fZuykVryZ-vx3EVtht4thrtyIImnVDVANL2M',
+    description:
+      'A timeless chronograph with a rich navy palette and a confident steel profile built for the coast and the city alike.',
+    accent: '#27507b',
+    mainImg:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCPrPB58MQhnCqR37m0xqJWHHWpbk4CT-DFo5oVzMphtCgYLyfwi1IDS_mrEUFCiShkS1NgSf_kx8HRe_ag9chwZ6IKl5ODOYxFpVG0wHgSpiRpFu0MnfZ3GJAAXpKiF9CENfEXYIKYGfGtlgEvK9-7oDnbBI5Q8f0iAVaWKHvPiZRjDoBYp-ifh11Xat3YYdhPwnxRNFl-c_QT-3HX7g5GwulpYYIIaQtSBxqIsBZ_GlPQaeRJR2rCc4nLQQKte_RxLOFspNrNpP0',
+    movementLabel: 'Movement',
+    movementTitle: 'Automatic Chronograph',
+    movementBody:
+      'Automatic chronograph architecture tuned for precision and quick readability.',
+    resistanceLabel: 'Resistance',
+    resistanceTitle: 'Ceramic Bezel',
+    resistanceBody:
+      'Ceramic bezel and robust steel case designed for dependable all-weather use.',
+    constructionLabel: 'Construction',
+    constructionTitle: 'Steel Case',
+    constructionBody:
+      'Steel case with a sunray navy dial and interchangeable bracelet system.',
+    dial: 'Sunray Navy',
+    reserve: '48 Hours',
   },
-  {
-    id: 'chronos-heritage',
-    name: 'Chronos Heritage',
-    series: 'Racing Series',
-    price: '$14,200',
-    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDhiExUmopF2O2u0j9GDbdJMuN_QVy7305iQDBtIxvmcl6-yCiVl4fd1WHipqxM4x6jk0sCBOOGGZaqJre2aIHkOJBkTD9IV-k6g2vxQv3pvT9NIquqtHqyeSEUxVztBCRLZE7jbgARizA_tZ4we9UkPNK_Avb1p6wKXs1fkvT_kemvqG8V8-wKDicJx3AMhfsL9oyhPOTJyqfO7ITe5m7MCfVqXRHOeS3GZgi4bq9OVX5ynTMLZlaWNmfjJFPL7WhB0r9i6npBLvI',
+  'grand-complication': {
+    id: 'grand-complication',
+    name: 'Grand Complication',
+    subtitle: 'White Gold Skeleton',
+    price: '$145,000',
+    description:
+      'The apex of the collection, Grand Complication combines ceremonial presence with a mechanically complex silhouette.',
+    accent: '#d6c08a',
+    mainImg:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDLihR_ATvfx9ndTGgVLFMCT70bUaclUsH3l7BS4NCeMEggyGSA0A0o5XXNC1duXdJcRjtNSLt2HYxtiZGALUBoIszl-kIixFxrxSGV95XZrpQDKXBuS2LQHiGnO0ARnTv73YJWCXj6dxA-mfo5Qkr4Il5Q6ztYqgVeXbv8vlSzSb0Qm_JV0ZomGJgRcb4Jc-qvPGZl1GSI63QBrWRp6uLDA3WBB1MmLvyUvOkYa-hLlbTu2UEaJ8xnxW-wWbi9wi8HGOXn69eRDws',
+    movementLabel: 'Movement',
+    movementTitle: 'Perpetual Calendar',
+    movementBody:
+      'Perpetual calendar architecture with moon phase precision and Geneva Seal finishing.',
+    resistanceLabel: 'Resistance',
+    resistanceTitle: 'Luxury Sealing',
+    resistanceBody:
+      'Luxury-first construction with sapphire protection and meticulous internal sealing.',
+    constructionLabel: 'Construction',
+    constructionTitle: 'White Gold Skeleton',
+    constructionBody:
+      'White gold skeleton case with hand-engraved bridges and artisanal finishing.',
+    dial: 'Ivory Skeleton',
+    reserve: '96 Hours',
   },
-  {
-    id: 'atlas-reserve',
-    name: 'Atlas Reserve',
-    series: 'Expedition Series',
-    price: '$11,500',
-    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC21D1hk6QEF9LdqqRDgNyXYuGZ02ZLQsqoBsvnVX6swMKUKNv6e2EReWKmc88tDPrXcD02VIhheeYC-CL9eZfV53OgBKTQFxqLv1_0R3_LhBfvMQ_by_NhBPACI1gRmUdwqfi-izWu6iKCe8ZMHn_7JjJUxGXE6hgGO6DQcvEzIoeWnnyphzoGpee9yMSQX1RfzTuGFupBbrbqlqgwjsQ-R28SJ8TbU7VzCsej_nu19oE15fAeYppTjW0x7bYMF-HL_KdNvTOeU3k',
+  'zenith-minimalist': {
+    id: 'zenith-minimalist',
+    name: 'Zenith Minimalist',
+    subtitle: 'Platinum 950',
+    price: '$32,000',
+    description:
+      'Clean lines, restrained proportions, and rare platinum presence define this understated expression of the series.',
+    accent: '#c8c6c5',
+    mainImg:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBQohKv5IZrvUmVvywaNhASsXstfPnfYs26p7HowVcVTjekS8tPQHxW2LJCIR2ewQyTRrnXl7CTceAouPIHBg5HbtlLztnblAEEfI2KntjsRHDNazCxS04FA0obKWBjpet3qnDngyGjXj6iKbI7bHe8i3dH865M14ZJWNh27csG_Ub_Ge14AmRIgjDzVZiZhyeK405LzzAPmeyRceviFVXM_oj4xnsTcJgPxzJvM7VBI-uv__HsleTg-mvIM_MOowQVBzi4mqwt2hQ',
+    movementLabel: 'Movement',
+    movementTitle: 'Ultra-thin Calibre',
+    movementBody:
+      'Ultra-thin automatic calibre with hand-finished bridges and minimal mass.',
+    resistanceLabel: 'Resistance',
+    resistanceTitle: 'Long-term Wear',
+    resistanceBody:
+      'Platinum case engineered for long-term durability with discreet luxury.',
+    constructionLabel: 'Construction',
+    constructionTitle: 'Platinum 950',
+    constructionBody:
+      'Platinum 950 case with polished surfaces and hand-finished detailing.',
+    dial: 'Pale Silver',
+    reserve: '74 Hours',
   },
-];
+};
 
 export default function ProductDetail() {
   const params = useParams<{ id: string }>();
+  const { addItem, items } = useCart();
   const [hoveredRelated, setHoveredRelated] = useState<string | null>(null);
   const [movementHovered, setMovementHovered] = useState(false);
+  const product = PRODUCTS[params.id ?? 'oceanic-deep-42'] ?? PRODUCTS['oceanic-deep-42'];
+  const related = Object.values(PRODUCTS).filter((item) => item.id !== product.id).slice(0, 3);
+  const inCartQuantity = items.find((item) => item.id === product.id)?.quantity ?? 0;
 
   return (
     <div style={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
-      <Navbar activeLink="collections" />
-
-      <main style={{ paddingTop: 80 }}>
-        {/* ─── PDP HERO ────────────────────────────────────────────── */}
+      <main style={{ paddingTop: 88 }}>
         <section
           style={{
             display: 'grid',
@@ -49,10 +201,9 @@ export default function ProductDetail() {
             minHeight: 921,
           }}
         >
-          {/* Image Panel */}
           <div
             style={{
-              backgroundColor: '#F4F4F4',
+              backgroundColor: '#f4f4f4',
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
@@ -81,8 +232,8 @@ export default function ProductDetail() {
               {' / '}Oceanic Series
             </div>
             <img
-              src={MAIN_IMG}
-              alt="Oceanic Deep 42"
+              src={product.mainImg}
+              alt={product.name}
               style={{
                 width: '100%',
                 height: '100%',
@@ -93,7 +244,6 @@ export default function ProductDetail() {
             />
           </div>
 
-          {/* Info Panel */}
           <div
             style={{
               padding: '80px 64px',
@@ -112,7 +262,7 @@ export default function ProductDetail() {
                   marginBottom: 8,
                 }}
               >
-                Oceanic Deep 42
+                {product.name}
               </h1>
               <p
                 style={{
@@ -121,11 +271,11 @@ export default function ProductDetail() {
                   fontWeight: 600,
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: '#735c00',
+                  color: product.accent,
                   marginBottom: 32,
                 }}
               >
-                The Professional Mariner's Standard
+                {product.subtitle}
               </p>
               <div
                 style={{
@@ -136,7 +286,7 @@ export default function ProductDetail() {
                   marginBottom: 40,
                 }}
               >
-                $12,400
+                {product.price}
               </div>
               <p
                 style={{
@@ -147,12 +297,12 @@ export default function ProductDetail() {
                   marginBottom: 48,
                 }}
               >
-                Engineering meets elegance. The Oceanic Deep 42 is a testament to Luxora's commitment to maritime exploration, blending high-grade 316L steel with our signature ceramic bezel technology.
+                {product.description}
               </p>
 
-              {/* CTAs */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <button
+                  type="button"
                   style={{
                     width: '100%',
                     backgroundColor: '#000',
@@ -167,10 +317,22 @@ export default function ProductDetail() {
                     cursor: 'pointer',
                     transition: 'background-color 0.3s',
                   }}
+                  onClick={() =>
+                    addItem({
+                      id: product.id,
+                      name: product.name,
+                      subtitle: product.subtitle,
+                      price: Number(product.price.replace(/[^0-9.]/g, '')),
+                      priceLabel: product.price,
+                      image: product.mainImg,
+                      accent: product.accent,
+                      series: 'Oceanic Series',
+                    })
+                  }
                   onMouseEnter={(e) => ((e.target as HTMLElement).style.backgroundColor = '#444748')}
                   onMouseLeave={(e) => ((e.target as HTMLElement).style.backgroundColor = '#000')}
                 >
-                  Add to Bag
+                  {inCartQuantity > 0 ? `Added to Bag (${inCartQuantity})` : 'Add to Bag'}
                 </button>
                 <button
                   style={{
@@ -194,7 +356,6 @@ export default function ProductDetail() {
                 </button>
               </div>
 
-              {/* Trust badges */}
               <div
                 style={{
                   marginTop: 48,
@@ -210,10 +371,7 @@ export default function ProductDetail() {
                   { icon: 'public', text: 'Global Shipping' },
                 ].map((badge) => (
                   <div key={badge.icon} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span
-                      className="material-symbols-outlined"
-                      style={{ color: '#735c00', fontSize: 20 }}
-                    >
+                    <span className="material-symbols-outlined" style={{ color: product.accent, fontSize: 20 }}>
                       {badge.icon}
                     </span>
                     <span
@@ -235,7 +393,6 @@ export default function ProductDetail() {
           </div>
         </section>
 
-        {/* ─── SPECS ───────────────────────────────────────────────── */}
         <section
           style={{
             backgroundColor: '#fff',
@@ -260,31 +417,30 @@ export default function ProductDetail() {
               >
                 Horological Specifications
               </h2>
-              <div style={{ width: 80, height: 1, backgroundColor: '#735c00', margin: '0 auto' }} />
+              <div style={{ width: 80, height: 1, backgroundColor: product.accent, margin: '0 auto' }} />
             </div>
 
-            {/* 3 spec cards */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
               {[
                 {
                   icon: 'settings_suggest',
-                  label: 'Movement',
-                  title: 'Calibre LX-102',
-                  body: 'A COSC-certified automatic movement featuring a Glucydur balance wheel and Nivaflex hairspring for extreme precision.',
+                  label: product.movementLabel,
+                  title: product.movementTitle,
+                  body: product.movementBody,
                   dark: false,
                 },
                 {
                   icon: 'water_drop',
-                  label: 'Resistance',
-                  title: '300 Meters',
-                  body: 'Triplock triple waterproofness system with a screw-down crown and helium escape valve for saturation diving.',
+                  label: product.resistanceLabel,
+                  title: product.resistanceTitle,
+                  body: product.resistanceBody,
                   dark: true,
                 },
                 {
                   icon: 'architecture',
-                  label: 'Construction',
-                  title: '42mm Brushed Steel',
-                  body: 'Hand-finished 316L grade stainless steel case paired with a unidirectional rotatable ceramic bezel.',
+                  label: product.constructionLabel,
+                  title: product.constructionTitle,
+                  body: product.constructionBody,
                   dark: false,
                 },
               ].map((spec) => (
@@ -295,9 +451,7 @@ export default function ProductDetail() {
                     color: spec.dark ? '#fff' : '#000',
                     padding: 40,
                     border: spec.dark ? 'none' : '1px solid rgba(116,120,120,0.1)',
-                    transition: spec.dark
-                      ? 'transform 0.5s'
-                      : 'box-shadow 0.5s',
+                    transition: spec.dark ? 'transform 0.5s' : 'box-shadow 0.5s',
                   }}
                   onMouseEnter={(e) => {
                     if (spec.dark) (e.currentTarget as HTMLElement).style.transform = 'scale(1.02)';
@@ -310,7 +464,7 @@ export default function ProductDetail() {
                 >
                   <span
                     className="material-symbols-outlined"
-                    style={{ color: '#e9c349', fontSize: 36, marginBottom: 24, display: 'block' }}
+                    style={{ color: product.accent, fontSize: 36, marginBottom: 24, display: 'block' }}
                   >
                     {spec.icon}
                   </span>
@@ -352,7 +506,6 @@ export default function ProductDetail() {
               ))}
             </div>
 
-            {/* Secondary spec row */}
             <div
               style={{
                 display: 'grid',
@@ -362,8 +515,8 @@ export default function ProductDetail() {
               }}
             >
               {[
-                { label: 'Dial', value: 'Midnight Blue Sunray' },
-                { label: 'Power Reserve', value: '72 Hours' },
+                { label: 'Dial', value: product.dial },
+                { label: 'Power Reserve', value: product.reserve },
               ].map((spec) => (
                 <div
                   key={spec.label}
@@ -402,7 +555,6 @@ export default function ProductDetail() {
           </div>
         </section>
 
-        {/* ─── EXPERIENCE THE MOVEMENT ─────────────────────────────── */}
         <section style={{ paddingTop: 120, paddingBottom: 120, overflow: 'hidden' }}>
           <div
             style={{
@@ -473,7 +625,7 @@ export default function ProductDetail() {
                   marginBottom: 40,
                 }}
               >
-                Every bridge is chamfered by hand, and every screw is polished to a mirror shine. This isn't just a timekeeping device; it is a mechanical sculpture designed to outlast its wearer.
+                Every bridge is chamfered by hand, and every screw is polished to a mirror shine. This is not just a timekeeping device; it is a mechanical sculpture designed to outlast its wearer.
               </p>
               <a
                 href="#"
@@ -504,7 +656,6 @@ export default function ProductDetail() {
           </div>
         </section>
 
-        {/* ─── INSPIRATION ─────────────────────────────────────────── */}
         <section
           style={{
             position: 'relative',
@@ -516,11 +667,7 @@ export default function ProductDetail() {
           }}
         >
           <div style={{ position: 'absolute', inset: 0, opacity: 0.4 }}>
-            <img
-              src={OCEAN_IMG}
-              alt="Deep ocean"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+            <img src={OCEAN_IMG} alt="Deep ocean" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div
             style={{
@@ -571,7 +718,6 @@ export default function ProductDetail() {
           </div>
         </section>
 
-        {/* ─── RELATED TIMEPIECES ───────────────────────────────────── */}
         <section
           style={{
             paddingTop: 120,
@@ -621,11 +767,11 @@ export default function ProductDetail() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 48 }}>
-              {RELATED.map((product) => (
-                <Link key={product.id} href={`/product/${product.id}`}>
+              {related.map((item) => (
+                <Link key={item.id} href={`/product/${item.id}`}>
                   <div
                     style={{ cursor: 'pointer' }}
-                    onMouseEnter={() => setHoveredRelated(product.id)}
+                    onMouseEnter={() => setHoveredRelated(item.id)}
                     onMouseLeave={() => setHoveredRelated(null)}
                   >
                     <div
@@ -636,14 +782,14 @@ export default function ProductDetail() {
                       }}
                     >
                       <img
-                        src={product.img}
-                        alt={product.name}
+                        src={item.mainImg}
+                        alt={item.name}
                         style={{
                           width: '100%',
                           height: 400,
                           objectFit: 'cover',
                           transition: 'transform 0.7s ease',
-                          transform: hoveredRelated === product.id ? 'scale(1.05)' : 'scale(1)',
+                          transform: hoveredRelated === item.id ? 'scale(1.05)' : 'scale(1)',
                         }}
                       />
                     </div>
@@ -656,7 +802,7 @@ export default function ProductDetail() {
                         marginBottom: 8,
                       }}
                     >
-                      {product.name}
+                      {item.name}
                     </h4>
                     <p
                       style={{
@@ -669,7 +815,7 @@ export default function ProductDetail() {
                         marginBottom: 16,
                       }}
                     >
-                      {product.series}
+                      Oceanic Series
                     </p>
                     <div
                       style={{
@@ -679,7 +825,7 @@ export default function ProductDetail() {
                         color: '#1a1c1c',
                       }}
                     >
-                      {product.price}
+                      {item.price}
                     </div>
                   </div>
                 </Link>
