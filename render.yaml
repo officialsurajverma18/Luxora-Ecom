@@ -4,7 +4,7 @@ services:
     runtime: static
     plan: free
     branch: main
-    buildCommand: corepack enable && pnpm install --frozen-lockfile && PORT=10000 BASE_PATH=/ pnpm --filter @workspace/luxora build
+    buildCommand: pnpm install --frozen-lockfile && PORT=10000 BASE_PATH=/ pnpm --filter @workspace/luxora build
     staticPublishPath: ./artifacts/luxora/dist/public
     envVars:
       - key: PORT
